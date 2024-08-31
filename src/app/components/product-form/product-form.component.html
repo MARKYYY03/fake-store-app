@@ -1,0 +1,113 @@
+<h1 class="app-title">FAKE STORE APP</h1>
+<button class="add-product-btn" (click)="openModal()">Add Product</button>
+<button class="show-all-btn" (click)="fetchProducts()">
+  Show All Products
+</button>
+
+<div class="controls">
+  <label for="limit">Limit:</label>
+  <select id="limit" (change)="onLimitChange($event)">
+    <option value="5">5</option>
+    <option value="10" selected>10</option>
+    <option value="15">15</option>
+    <option value="20">20</option>
+  </select>
+
+  <label for="sort">Sort By:</label>
+  <select id="sort" (change)="onSortChange($event)">
+    <option value="price">Price: Low to High</option>
+    <option value="-price">Price: High to Low</option>
+    <option value="title">Title: A-Z</option>
+    <option value="-title">Title: Z-A</option>
+    <option value="category">Category: A-Z</option>
+    <option value="-category">Category: Z-A</option>
+  </select>
+</div>
+
+<div class="modal" [class.show]="isModalOpen">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h2>Add new product</h2>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <div class="form-section">
+        <h3>General Information</h3>
+        <label for="title">Product Name:</label>
+        <input id="title" formControlName="title" required />
+
+        <label for="description">Description:</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-section">
+        <h3>Pricing</h3>
+        <label for="price">Base Price:</label>
+        <input id="price" formControlName="price" required />
+      </div>
+      <div class="form-section">
+        <h3>category</h3>
+        <label for="category">category:</label>
+        <input id="category" formControlName="category" required />
+      </div>
+
+      <div class="url-upload">
+        <label for="image-url">Import from URL</label>
+        <input
+          id="image-url"
+          formControlName="image"
+          placeholder="Add file URL"
+        />
+      </div>
+
+      <div class="modal-buttons">
+        <button type="button" (click)="closeModal()">Cancel</button>
+        <button type="submit" (ngSubmit)="onSubmit()">Add Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal" [class.show]="isDescriptionModalOpen">
+  <div class="modal-content">
+    <span class="close" (click)="closeDescriptionModal()">&times;</span>
+
+    <h2>Product Description</h2>
+    <div class="image-container">
+      <img
+        [src]="selectedProduct?.image"
+        alt="{{ selectedProduct?.title }}"
+        class="open-modal-image"
+      />
+    </div>
+    <p>Price: ${{ selectedProduct?.price }}</p>
+
+    <p>{{ selectedProduct?.description }}</p>
+  </div>
+</div>
+
+<h2>Products</h2>
+<div class="product-grid">
+  <div class="product-card" *ngFor="let product of products; let i = index">
+    <img
+      [src]="product.image"
+      alt="{{ product.title }}"
+      class="product-image"
+    />
+    <div class="product-info">
+      <h3>{{ product.title }}</h3>
+      <p class="price">${{ product.price }}</p>
+      <span class="category">{{ product.category }}</span>
+
+      <div class="button-container">
+        <button class="view" (click)="viewProductDescription(product)">
+          View
+        </button>
+        <button class="edit" (click)="editProduct(i)">Edit</button>
+        <button class="delete" (click)="deleteProduct(i)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
